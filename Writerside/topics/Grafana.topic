@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Grafana" id="Grafana">
+
+    <p>
+        Grafana es una herramienta de visualización para métricas, registros y trazas.
+    </p>
+    <p>
+        Grafana por sí sola no recopila ningún dato. Es una interfaz que nos permite
+        visualizar datos recopilados por otras herramientas.
+    </p>
+    <p>
+        En este taller, utilizaremos Grafana para visualizar métricas recopiladas por Prometheus
+        y logs y trazas recopiladas por Loki.
+    </p>
+    <p>
+        Con nuestro stack de observabilidad desplegado, podemos acceder a Grafana en
+        <a href="http://localhost:3000">http://localhost:3000</a>.
+    </p>
+    <p>
+        Nos recibirá la página de inicio de sesión. El nombre de usuario y la contraseña predeterminados son
+        <code>admin</code> y <code>admin</code>.
+    </p>
+    <tip>
+        No es necesario que cambies la contraseña predeterminada para este taller.
+    </tip>
+    <p>
+        Una vez iniciada la sesión, nos recibirá la página de inicio. La página de inicio
+        nos guiará a través del proceso de agregar un origen de datos y crear un
+        panel de control.
+    </p>
+    <p>
+        Comenzaremos agregando Prometheus como origen de datos. Para hacerlo, podemos hacer clic en
+        el botón <ui-path>Agregar origen de datos</ui-path>.
+    </p>
+    <p>
+        En la página de configuración del origen de datos, podemos seleccionar <ui-path>Prometheus</ui-path> como el tipo
+        de origen de datos. Luego podemos configurar la URL del servidor de Prometheus. En nuestro caso, la URL
+        es <a href="http://prometheus:9090">http://prometheus:9090</a>. Luego podemos hacer clic en el botón <ui-path>Guardar
+        y probar</ui-path> para probar la conexión con el servidor de Prometheus.
+    </p>
+    <p>
+        Deberíamos poder agregar Loki como origen de datos de la misma manera. La URL del
+        servidor de Loki es <a href="http://loki:3100">http://loki:3100</a>. Luego podemos hacer clic en el botón <ui-path>Guardar
+        y probar</ui-path> para probar la conexión con el servidor de Loki.
+    </p>
+    <p>
+        Una vez que tenemos nuestras fuentes de datos configuradas, Grafana ahora puede consultar los datos
+        recopilados por Prometheus y Loki.
+    </p>
+
+    <seealso>
+        <category ref="external">
+            <a href="https://play.grafana.org" summary="">Play with Grafana</a>
+            <a href="https://grafana.com/" summary="">Grafana</a>
+            <a href="https://openmetrics.io/" summary="">Open Metrics</a>
+        </category>
+    </seealso>
+</topic>

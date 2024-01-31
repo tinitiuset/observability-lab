@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Node Exporter" id="Node-Exporter">
+
+    <p>
+        Node Exporter es un servicio que recopila métricas sobre la máquina anfitriona y
+        las envía a Prometheus.
+    </p>
+    <p>
+        Podemos acceder a las métricas recopiladas por Node Exporter yendo a
+        <a href="http://localhost:9100/metrics">http://localhost:9100/metrics</a> en nuestro
+        navegador.
+    </p>
+    <p>
+        Node Exporter exporta muchas métricas, algunas son fácilmente comprensibles
+        y otras no. Incluso si no entendemos todas las métricas, aún pueden ser útiles para nosotros.
+    </p>
+    <p>
+        Vamos a buscar el número de descriptores de archivo abiertos por nuestro servidor en las métricas.
+    </p>
+    <code-block lang="bash">
+        curl -s http://localhost:9100/metrics | grep node_filefd_allocated
+    </code-block>
+    <p>
+        La métrica no solo está compuesta por un nombre y un valor, también tienen etiquetas que
+        nos dan más información sobre la métrica:
+    </p>
+    <list>
+        <li>
+            <p>
+                La etiqueta <code>help</code> que nos proporciona una descripción de la métrica.
+            </p>
+        </li>
+        <li>
+            <p>
+                La etiqueta <code>type</code> que nos indica que la métrica es un <code>gauge</code>.
+                Un gauge es una métrica que puede subir y bajar con el tiempo.
+            </p>
+        </li>
+    </list>
+</topic>

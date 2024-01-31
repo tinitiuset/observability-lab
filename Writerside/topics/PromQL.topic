@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="PromQL" id="PromQL">
+
+    <p>
+        PromQL es el lenguaje de consulta utilizado para consultar Prometheus. Es un lenguaje funcional
+        que nos permite seleccionar y agregar métricas.
+    </p>
+    <chapter title="Consultas Básicas" id="basic-queries">
+        <chapter title="Seleccionar una métrica" id="selecting-a-metric">
+            <p>
+                Para seleccionar una métrica, podemos usar su nombre. Por ejemplo, para seleccionar la métrica
+                <code>node_filefd_allocated</code>, podemos usar la siguiente consulta:
+            </p>
+
+            <code-block lang="console">
+                node_filefd_allocated
+            </code-block>
+        </chapter>
+        <chapter title="Filtrar por etiqueta" id="filtering-by-label">
+            <p>
+                Para filtrar una métrica por etiqueta, podemos usar llaves (<code>{}</code>) para especificar la etiqueta.
+            </p>
+            <p>
+                Por ejemplo, para seleccionar la métrica <code>node_filefd_allocated</code> con la etiqueta <code>job</code>
+                establecida en <code>node_exporter</code>:
+            </p>
+
+            <code-block lang="console">
+                node_filefd_allocated{job="node_exporter"}
+            </code-block>
+        </chapter>
+    </chapter>
+</topic>

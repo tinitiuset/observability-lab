@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Loki" id="Loki">
+
+    <p>
+        Loki es una base de datos de registros y un motor de colección y agregación de logs. Está
+        diseñado para ser utilizado como un complemento de Prometheus.
+    </p>
+    <p>
+        Para que Loki pueda recopilar logs, necesitamos configurar nuestras aplicaciones para
+        enviar sus logs a Loki. Utilizaremos Promtail para hacerlo.
+    </p>
+    <p>
+        Podemos consultar Loki usando PromQL. También podemos usar Grafana para visualizar los logs
+        recopilados por Loki.
+    </p>
+</topic>

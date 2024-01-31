@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="DevOps y Observabilidad" id="DevOps-y-Observabilidad">
+
+    <p>
+        El DevOps es una cultura que fomenta la colaboración entre equipos de desarrollo y operaciones para desplegar
+        código en producción de forma rápida, automatizada y repetible. La idea es construir una cultura de
+        responsabilidad compartida para el lanzamiento de características y actualizaciones de software. Este cambio
+        cultural acorta el ciclo de desarrollo, aumenta la frecuencia de despliegue y ayuda a ofrecer lanzamientos de
+        software más confiables.
+    </p>
+
+    <p>
+        Los microservicios y contenedores se utilizan frecuentemente en entornos DevOps. Los microservicios son
+        servicios pequeños e independientes que trabajan con otros microservicios. Los contenedores son una forma de
+        empaquetar software para que pueda ejecutarse de manera consistente en diferentes entornos informáticos.
+        A menudo, se utilizan microservicios y contenedores juntos porque los contenedores son una buena herramienta
+        para desplegar microservicios.
+    </p>
+</topic>

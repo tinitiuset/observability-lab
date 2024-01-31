@@ -1,0 +1,8 @@
+<buildprofiles xsi:noNamespaceShemaLocation="https://resources.jetbrains.com/writerside/1.0/buildprofiles.xsd"
+    xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
+    <variables>
+        <header-logo>logo.png</header-logo>
+        <product-web-url>https://tini.media</product-web-url>
+    </variables>
+    <build-profile instance="Taller de Observabilidad"/>
+</buildprofiles>

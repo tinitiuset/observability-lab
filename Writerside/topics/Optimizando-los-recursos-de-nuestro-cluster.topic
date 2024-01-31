@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Optimizando los recursos de nuestro cluster" id="Optimizando-los-recursos-de-nuestro-cluster">
+
+    <p>
+        Hasta ahora, hemos estado trabajando con un solo nodo. En este tutorial, crearemos
+        un clúster de nodos. Utilizar un solo nodo puede ser útil con fines de prueba y desarrollo,
+        pero queremos comprender cómo estas herramientas pueden ser utilizadas en una infraestructura
+        de producción.
+    </p>
+
+    <p>
+        Las herramientas que estamos utilizando para observar nuestro servidor pueden añadir cierta carga, perjudicando
+        el rendimiento del trabajo que realmente queramos realizar. Por lo tanto, es importante diseñar
+        una arquitectura que nos permita observar nuestra infraestructura sin afectar (demasiado) al rendimiento.
+    </p>
+
+    <p>
+        Prometheus, Grafana y Loki son herramientas que pueden gestionar entradas y salidas de datos desde y hacia
+        diferentes fuentes. Por lo tanto, podemos utilizarlas para observar un clúster de nodos desde una sola
+        instancia de Grafana, Prometheus y Loki.
+    </p>
+
+    <p>
+        A continuación se propone una arquitectura que nos permitirá observar un clúster de nodos desde una sola
+        instancia de Grafana, Prometheus y Loki.
+    </p>
+
+    <chapter title="Arquitectura Observador-Observado" id="arquitectura">
+        <p>
+            Tendremos dos tipos de nodos:
+        </p>
+
+        <list>
+            <li>1 Observador</li>
+            <li>X Observados</li>
+        </list>
+
+        <tip>
+            Una arquitectura bien pensada es la clave para una infraestructura de producción exitosa,
+            facilitará la gestión de la infraestructura.
+        </tip>
+
+        <img src="Cluster.png" alt="Arquitectura del clúster"/>
+    </chapter>
+
+    <chapter title="En el nodo Observador" id="observador">
+
+        <p>
+            El host observador será el que albergará Grafana, Loki y Prometheus.
+        </p>
+
+        <p>
+            Prometheus es un scraper, lo que significa que será responsable de recopilar métricas de
+            los observados. Por lo tanto, necesitamos configurarlo para que sepa dónde encontrar a los observados.
+        </p>
+        <procedure>
+            <step>
+                <p>
+                    Abre el archivo <code>observability-lab/resources/prometheus.yml</code> en tu editor favorito.
+                </p>
+                <tip>
+                    Si estás usando la terminal, puedes usar el editor <code>nano</code> en lugar de <code>vim</code>.
+                </tip>
+            </step>
+            <step>
+                <p>
+                    Editaremos la sección <code>scrape_configs</code> del archivo:
+                </p>
+                <code-block lang="yaml">
+                    - job_name: "node_exporter"
+                    static_configs:
+                    - targets: ["node-exporter:9100"]
+
+                    - job_name: "cadvisor"
+                    static_configs:
+                    - targets: ["cadvisor:8080"]
+                </code-block>
+            </step>
+            <step>
+                <p>
+                    Como cada uno de nuestros observados ejecutará un <code>node-exporter</code> y un <code>cadvisor</code>,
+                    necesitaremos agregarlos a la lista de destinos:
+                </p>
+                <code-block lang="yaml">
+                    - job_name: "node_exporter"
+                    static_configs:
+                    - targets: ["node-exporter:9100", "observado1:9100", "observado2:9100", "observadoX:9100"]
+
+                    - job_name: "cadvisor"
+                    static_configs:
+                    - targets: ["cadvisor:8080", "observado1:8080", "observado2:8080", "observadoX:8080"]
+                </code-block>
+                <p>
+                    Reemplaza <code>observado1</code>, <code>observado2</code> y <code>observadoX</code> con las
+                    direcciones IP de tus observados.
+                </p>
+            </step>
+            <step>
+                <p>
+                    Guarda el archivo y sal de tu editor.
+                </p>
+            </step>
+            <step>
+                <p>
+                    Reinicia el contenedor de Prometheus:
+                </p>
+                <code-block lang="bash">
+                    docker restart prometheus
+                </code-block>
+            </step>
+            <step>
+                <p>
+                    Abre la interfaz web de Prometheus en <code>http://localhost:9090</code>.
+                </p>
+                <p>
+                    Deberías ver los targets de <code>node_exporter</code> y <code>cadvisor</code>
+                    en la página de <code>Targets</code>.
+                    Si no los ves, espera unos segundos y actualiza la página, el scrapping
+                    puede tardar unos segundos.
+                </p>
+            </step>
+        </procedure>
+    </chapter>
+
+    <chapter title="En los nodos Observados" id="observado">
+        <p>
+            Los hosts observados serán observados por el observador.
+            Ejecutarán los servicios <code>node-exporter</code>, <code>cadvisor</code>
+            y <code>promtail</code>.
+        </p>
+
+        <p>
+            Necesitaremos configurar <code>promtail</code> para enviar registros al observador,
+            ya que <code>promtail</code> es el agente que se encargará de enviar registros
+            a Loki.
+        </p>
+        <procedure>
+            <step>
+                <p>
+                    Abre el archivo <code>observability-lab/resources/promtail.yml</code> en tu editor favorito.
+                </p>
+                <tip>
+                    Si estás usando la terminal, puedes usar el editor <code>nano</code> en lugar de <code>vim</code>.
+                </tip>
+            </step>
+            <step>
+                <p>
+                    Editaremos la sección <code>clients</code> del archivo:
+                </p>
+                <code-block lang="yaml">
+                    clients:
+                    - url: http://localhost:3100/loki/api/v1/push
+                </code-block>
+            </step>
+            <step>
+                <p>
+                    Reemplaza <code>localhost</code> con la dirección IP de tu observador.
+                </p>
+            </step>
+            <step>
+                <p>
+                    Guarda el archivo y sal de tu editor.
+                </p>
+            </step>
+            <step>
+                <p>
+                    Reinicia el contenedor de <code>promtail</code>:
+                </p>
+                <code-block lang="bash">
+                    docker restart promtail
+                </code-block>
+            </step>
+            <step>
+                <p>
+                    Como observado, ya no necesitaremos los servicios de Grafana, Loki, Prometheus y Blackbox.
+                    Los detendremos:
+                </p>
+                <code-block lang="bash">
+                    docker stop grafana loki prometheus blackbox
+                </code-block>
+            </step>
+            <step>
+                <p>
+                    Ahora estaríamos listos para desplegar nuestra aplicación en los hosts observados.
+                </p>
+            </step>
+        </procedure>
+    </chapter>
+
+    <chapter title="Lo que has aprendido" id="what-learned">
+        <p>
+            Llegados a este punto, deberías entender cómo un clúster de nodos puede ser observado por una sola
+            instancia de Grafana. Esta es la arquitectura que se utiliza comúnmente en entornos de producción.
+        </p>
+    </chapter>
+
+</topic>

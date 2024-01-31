@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Pruebas de carga en nuestro cluster" id="Pruebas-de-carga-en-nuestro-cluster">
+
+    <warning>
+        <p>
+            <control>
+                Esta parte es experimental y no ha sido completamente probada.
+            </control>
+        </p>
+        <p>
+            Procede con precaución.
+        </p>
+    </warning>
+    <warning>
+        <p>
+            <control>
+                Solo los Observados deben someterse a pruebas de carga.
+            </control>
+        </p>
+        <p>
+            Las pruebas de carga en el Observador podrían hacer que este se bloquee y nos deje sin datos.
+        </p>
+    </warning>
+    <p>
+        Hasta ahora, tenemos un clúster observable que funciona. Ahora queremos ver cómo se comporta bajo carga.
+        La idea es simular cargas de trabajo grandes y observar los efectos en Grafana.
+    </p>
+    <warning>
+        <p>
+            <control>
+                Podría ser una buena idea guardar el estado de nuestras máquinas virtuales antes de comenzar.
+            </control>
+        </p>
+    </warning>
+
+    <chapter title="Todos quieren cenar" id="everyone-dinner">
+        <p>
+            ¿Te sientes como un chef? Vamos a cocinar algo de carga.
+        </p>
+
+        <procedure>
+            <step>
+                <p>
+                    Asegúrate de que la imagen de docker <code>philo</code> exista.
+                </p>
+                <code-block lang="bash">
+                    docker images
+                </code-block>
+            </step>
+            <step>
+                <p>
+                    Ejecuta la imagen <code>philo</code> 20 veces.
+                </p>
+                <code-block lang="bash">
+                    for i in {1..20}
+                    do
+                    docker run --rm -it -d -e PHILO_ARGS="5 800 200 200" --name $i philo
+                    done
+                </code-block>
+                <note>
+                    <control>
+                        Recuerda detener los contenedores cuando hayas terminado.
+                    </control>
+                    <p>
+                        (Si el host no se bloquea)
+                    </p>
+                    <code-block lang="bash">
+                        for i in {1..20}
+                        do
+                        docker rm -f $i
+                        done
+                    </code-block>
+                </note>
+            </step>
+            <step>
+                <p>
+                    20 instancias de Philosophers pueden no ser suficientes.
+                    Considera agregar más si así lo deseas.
+                </p>
+            </step>
+        </procedure>
+    </chapter>
+    <chapter title="Usando una herramienta dedicada" id="decicated-tool">
+        <p>
+            Stress es una herramienta que se puede utilizar para simular carga.
+        </p>
+        <warning>
+            <p>
+                <control>
+                    Esto podría bloquear el host.
+                </control>
+            </p>
+        </warning>
+
+        <procedure>
+            <step>
+                <p>
+                    Instala <code>stress</code>.
+                </p>
+                <code-block lang="bash">
+                    sudo apt install stress
+                </code-block>
+            </step>
+            <step>
+                <p>
+                    Ejecuta <code>stress</code>.
+                </p>
+                <code-block lang="bash">
+                    stress --cpu 4 --io 3 --vm 2 --vm-bytes 128M --timeout 10s
+                </code-block>
+            </step>
+        </procedure>
+    </chapter>
+    <chapter title="Nos hemos quedado sin espacio en disco" id="disk-space">
+        <p>
+            ¿Quieres ver qué sucede cuando nos quedamos sin espacio en disco?
+        </p>
+
+        <p>
+            Aquí tienes algunas ideas:
+        </p>
+
+        <code-block lang="bash">
+            dd if=/dev/zero of=bigfile bs=1G count=15
+        </code-block>
+        <code-block lang="bash">
+            cat /dev/random > bigfile
+        </code-block>
+        <code-block lang="bash">
+            fallocate -l 15G bigfile
+        </code-block>
+    </chapter>
+</topic>

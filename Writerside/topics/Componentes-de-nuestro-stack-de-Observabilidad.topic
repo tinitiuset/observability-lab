@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Componentes de nuestro stack de Observabilidad" id="Componentes-de-nuestro-stack-de-Observabilidad">
+
+    <p>
+        Un stack de obsevaribilidad es un conjunto de herramientas cuyo propósito es recopilar
+        datos relevantes sobre el comportamiento y el estado de uno o más sistemas y presentarlos
+        de una manera que facilite la comprensión.
+    </p>
+
+    <chapter title="Pilares" id="pillars">
+        <p>Los tres pilares de un stack de observabilidad son:</p>
+        <deflist>
+            <def title="Métricas">
+                Una métrica es una medida del estado de un sistema. Las métricas generalmente se
+                recopilan a intervalos regulares y se utilizan para entender el comportamiento del
+                sistema a lo largo del tiempo.
+            </def>
+            <def title="Logs">
+                Los logs son registros de eventos que ocurrieron en un sistema. Los logs generalmente
+                se utilizan para entender el comportamiento del sistema en un momento específico.
+            </def>
+            <def title="Traces">
+                Las trazas son registros del camino de una solicitud a través de un sistema. Las trazas
+                generalmente se utilizan para entender el comportamiento del sistema al manejar una solicitud.
+            </def>
+        </deflist>
+    </chapter>
+    <chapter title="Herramientas" id="tools">
+        <p>Las herramientas que van a componer nuestro stack de observabilidad son:</p>
+        <deflist>
+            <def title="Grafana">
+                <p>
+                    <a href="https://grafana.com/">Grafana</a> es una suite de análisis y visualización de métricas de código
+                    abierto.
+                    Se utiliza comúnmente para visualizar datos de series temporales para
+                    análisis de infraestructura y aplicaciones.
+                </p>
+            </def>
+            <def title="Prometheus" >
+                <p>
+                    <a href="https://prometheus.io/">Prometheus</a> es un motor de base de datos de series temporales de
+                    código abierto que se utiliza comúnmente para almacenar métricas. Además, Prometheus proporciona
+                    un lenguaje de consulta para analizar los datos almacenados y un servicio de alertas.
+                </p>
+            </def>
+            <def title="Node Exporter">
+                <p>
+                    <a href="https://github.com/prometheus/node_exporter">Node Exporter</a>
+                    recopila métricas sobre la máquina host y las envía a Prometheus.
+                </p>
+            </def>
+            <def title="Blackbox Exporter">
+                <p>
+                    <a href="https://github.com/prometheus/blackbox_exporter">Blackbox Exporter</a>
+                    recopila métricas sobre un objetivo al sondearlo mediante HTTP, HTTPS, DNS, TCP e ICMP.
+                </p>
+            </def>
+            <def title="cAdvisor">
+                <p>
+                    <a href="https://grafana.com/loki">cAdvisor</a> analiza el uso de recursos
+                    y las características de rendimiento de los contenedores en ejecución.
+                </p>
+            </def>
+            <def title="Loki">
+                <p>
+                    <a href="https://grafana.com/loki">Loki</a> es un sistema de agregación de logs
+                    escalable horizontalmente, altamente disponible y multitenant inspirado en Prometheus.
+                </p>
+            </def>
+            <def title="Promtail">
+                <p>
+                    <a href="https://grafana.com/docs/loki/latest/clients/promtail/">Promtail</a>
+                    envía el contenido de los logs locales a una instancia de Loki.
+                </p>
+            </def>
+        </deflist>
+
+    </chapter>
+
+    <chapter title="Nuestro stack de forma visual" id="visual">
+        <p>El siguiente diagrama muestra cómo se relacionan los componentes de nuestro stack de observabilidad:</p>
+        <img src="Basic architecture.drawio.png" alt="Basic Observability Stack"/>
+
+    </chapter>
+    <seealso>
+        <category ref="external">
+            <a href="https://openmetrics.io/" summary="">Open Metrics</a>
+            <a href="https://aws.amazon.com/microservices/" summary="">Micro Services by AWS</a>
+        </category>
+    </seealso>
+</topic>

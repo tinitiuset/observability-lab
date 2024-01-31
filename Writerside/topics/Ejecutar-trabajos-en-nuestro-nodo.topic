@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Ejecutar trabajos en nuestro nodo" id="Ejecutar-trabajos-en-nuestro-nodo">
+
+    <p>
+        El objetivo de este artículo es ejecutar una aplicación de muestra para que podamos generar datos
+        para nuestras herramientas de observabilidad.
+    </p>
+    <note>
+        <p>
+            Este artículo se basará en el proyecto 42 Philosophers, que es un proyecto
+            que simula el problema de los filósofos cenando.
+        </p>
+    </note>
+
+    <chapter title="Contenedorizando Philosophers" id="philo-en-contenedor">
+        <p>
+            Utilizaremos Docker para contenedorizar nuestra aplicación, de modo que podamos desplegar múltiples instancias
+            de ella de manera sencilla.
+        </p>
+        <procedure>
+            <step>
+                <p>
+                    Primero, necesitamos crear un Dockerfile, que se utilizará para construir nuestra imagen.
+                </p>
+                <p>
+                    Crea un archivo llamado <code>Dockerfile</code> en el directorio <code>observability-lab/utilities/philo</code>.
+                </p>
+                <p>
+                    Agrega el siguiente contenido al archivo:
+                </p>
+                <code-block lang="docker">
+                    FROM ubuntu:latest
+
+                    RUN apt-get update &amp;&amp; apt-get install -y \
+                    --no-install-recommends \
+                    git \
+                    build-essential \
+                    ca-certificates \
+                    pwgen \
+                    &amp;&amp; \
+                    apt-get clean &amp;&amp; \
+                    rm -rf /var/lib/apt/lists/*
+
+                    RUN git clone "https://github.com/tinitiuset/philosophers.git" /usr/local/bin/philo
+
+                    RUN make -C /usr/local/bin/philo/philo
+
+                    RUN chmod a+x /usr/local/bin/philo/philo/philo
+
+                    ENV PATH="/usr/local/bin/philo/philo:$PATH"
+
+                    ENV PHILO_ARGS=""
+
+                    ENTRYPOINT philo $PHILO_ARGS | tee -a /var/log/philo/philo-$(pwgen 5).log
+                </code-block>
+            </step>
+            <step>
+                <p>
+                    Después de crear el Dockerfile, necesitamos construir la imagen.
+                </p>
+                <p>
+                    Ejecuta el siguiente comando en <code>observability-lab/utilities/philo</code>:
+                </p>
+                <code-block lang="bash">
+                    docker build -t philo .
+                </code-block>
+            </step>
+            <step>
+                <p>
+                    Finalmente, podríamos ejecutar la imagen que acabamos de construir.
+                </p>
+                <p>
+                    Ejecuta el siguiente comando en <code>observability-lab/utilities/philo</code>:
+                </p>
+                <code-block lang="bash">
+                    docker run --rm -it -e PHILO_ARGS="5 800 200 200" philo
+                </code-block>
+                <tip>
+                    <p>
+                        Puedes cambiar PHILO_ARGS para cambiar el número de filósofos,
+                        el tiempo que comen, duermen y piensan. ¡Inténtalo!
+                    </p>
+                </tip>
+            </step>
+            <step>
+                <p>
+                    También se proporciona un archivo docker-compose en <code>observability-lab/utilities/philo</code>,
+                    que se puede utilizar para ejecutar múltiples instancias de la aplicación. Los logs se escribirán
+                    en <code>observability-lab/data/philo/</code> para que Promtail pueda recopilarlos.
+                </p>
+                <p>
+                    Ejecuta el siguiente comando en <code>observability-lab/utilities/philo</code>:
+                </p>
+                <code-block lang="bash">
+                    docker compose up
+                </code-block>
+
+            </step>
+        </procedure>
+    </chapter>
+    <chapter title="Lo que has aprendido" id="what-learned">
+        <p>
+            Has aprendido cómo contenedorizar Philosophers y cómo ejecutar múltiples instancias simultáneamente.
+        </p>
+    </chapter>
+</topic>
